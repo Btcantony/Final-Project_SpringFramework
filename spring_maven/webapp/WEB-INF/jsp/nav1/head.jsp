@@ -6,7 +6,7 @@
 	<meta name="author"content="Copyright © it-partner Corporation. All Rights Reserved.">
 	<meta name="description" content="남녀노소 명품 브랜드">
 	<meta name="robots" content="all">
-	<title>Final-Project</title>
+	<title>Final</title>
 	<meta property="og:title" content="Kream">
 	<meta property="og:site_name" content="Kream">
 	<meta property="og:type" content="website">
