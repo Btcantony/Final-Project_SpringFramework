@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+	<meta name="author"content="Copyright © it-partner Corporation. All Rights Reserved.">
+	<meta name="description" content="남녀노소 명품 브랜드">
+	<meta name="robots" content="all">
+	<title>테스트</title>
+	<meta property="og:title" content="Kream">
+	<meta property="og:site_name" content="Kream">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://it-partner.co.kr">
+	<link rel="canonical" href="https://it-partner.co.kr">
+	<link rel="alternate" href="https://it-partner.co.kr">
+		
+</head>	
+<!-- MAIN CSS -->
+<style>
+.swiper-slide .img {
+    position: relative;
+}
+</style>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css">				
+<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>	
+<body>
+	<h3>info</h3>
+	<div class="swiper">									
+		<div class="swiper-wrapper">	    
+		    <div class="swiper-slide">
+		    	<img src="/resources/imgs/sample.png">
+		    </div>
+		    <div class="swiper-slide">
+		    	<img src="/resources/imgs/sample.png">
+		    </div>
+		    <div class="swiper-slide">
+		    	<img src="/resources/imgs/sample.png">
+		    </div>
+		    <div class="swiper-slide">
+		    	<img src="/resources/imgs/sample.png">
+		    </div>
+		    <div class="swiper-slide">
+		    	<img src="/resources/imgs/sample.png">
+		    </div>	    
+	  	</div>
+		
+		<!-- If we need pagination -->
+		<div class="swiper-pagination"></div>
+
+		<!-- If we need navigation buttons -->
+		<div class="swiper-button-prev"></div>
+		<div class="swiper-button-next"></div>
+
+		<!-- If we need scrollbar -->
+		<div class="swiper-scrollbar"></div>
+	</div>	
+</body>
+
+<script>   
+	var swiper;
+	$(window).load(function() { 
+		$('h3').text(navigator.userAgent);
+		swiper = new Swiper('.swiper', {
+			// Optional parameters
+			direction : 'horizontal',
+			loop : true,			
+			// If we need pagination
+			pagination : {
+				el : '.swiper-pagination',
+			},
+
+			// Navigation arrows
+			navigation : {
+				nextEl : '.swiper-button-next',
+				prevEl : '.swiper-button-prev',
+			},
+			  on: {
+			    slideChange: function () {
+			      for (var i = 0; i < $('.swiper-slide').length; i++) {
+			    	  $('.swiper-slide').eq(i).html('<img src="/resources/imgs/sample.png">');
+				  }
+			      
+			      setTimeout(function() {
+			    	  var w = $('.swiper-wrapper').width();
+			    	  var idx = swiper.activeIndex;
+			    	  /* if(idx == 1) $('.swiper-slide').eq(idx).html('<video style="width:'+w+'px" autoplay src="https://univactors.com/g5/data/file/model/7b3a0067f6c23bcf9cb9c66bbd5d6d99_H5Nb2rgF_08de6be6b41db246c4986c59236ada3cd9db15bf.mp4"></video>'); */
+			    	  if(idx == 2) $('.swiper-slide').eq(idx).html('<video style="width:'+w+'px" autoplay src="https://univactors.com/g5/data/file/model/7b3a0067f6c23bcf9cb9c66bbd5d6d99_7wgh8Q1E_e4058a38633dbd41c298ba647c19cbd618dcf313.mp4"></video>');
+				      if(idx == 3) $('.swiper-slide').eq(idx).html('<video style="width:'+w+'px" autoplay src="https://univactors.com/g5/data/file/model/7b3a0067f6c23bcf9cb9c66bbd5d6d99_0oULXw8m_bf2a9a0ef9663956ee3bbdda196c81476431b35d.mp4"></video>');
+				      if(idx == 4) $('.swiper-slide').eq(idx).html('<video style="width:'+w+'px" autoplay src="https://univactors.com/g5/data/file/model/7b3a0067f6c23bcf9cb9c66bbd5d6d99_sk6Cdyce_81e3e1bf452a98218d62213aceb9ad71245a59b8.mp4"></video>');
+				      if(idx == 5) $('.swiper-slide').eq(idx).html('<video style="width:'+w+'px" autoplay src="https://univactors.com/g5/data/file/model/7b3a0067f6c23bcf9cb9c66bbd5d6d99_YRW9wiUA_5c65ddf9c4f6adea2eed51bdfc1800bf15ba8901.mp4"></video>');
+				      if(idx == 6) $('.swiper-slide').eq(idx).html('<video style="width:'+w+'px" autoplay src="https://univactors.com/g5/data/file/model/7b3a0067f6c23bcf9cb9c66bbd5d6d99_6LwGJ3cd_607ef1446172994f7ecfd7f68adabca52acc1eba.MP4"></video>');
+				      if(idx == 7) $('.swiper-slide').eq(idx).html('<video style="width:'+w+'px" autoplay src="https://univactors.com/g5/data/file/model/7b3a0067f6c23bcf9cb9c66bbd5d6d99_VD7Sdq8R_87b454289c80b62d8e0b0600d125857057e11daf.mp4"></video>');
+				      console.log(idx);
+			      }, 500);			      			      
+			    }
+			},
+
+			// And if we need scrollbar
+			scrollbar : {
+				el : '.swiper-scrollbar',
+			},
+		}); 
+	});
+</script>
+</html>

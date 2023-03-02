@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Upbit">	
+	<select id="select_user" parameterType="main.java.com.web.dto.upbit.UpbitUser" resultType="main.java.com.web.dto.upbit.UpbitUser">
+		select * from UPBIT_USER
+		where 1 = 1 
+		and access_key = #{access_key}
+    	and secret_key = #{secret_key}    	
+	</select>
+	
+	<select id="select_users" parameterType="main.java.com.web.dto.upbit.UpbitUser" resultType="main.java.com.web.dto.upbit.UpbitUser">
+		select * from UPBIT_USER
+		where 1 = 1 
+		<if test="status_code != null and status_code != ''">
+		and status_code = #{status_code}
+		</if>		    	
+		<if test="run_code != null and run_code != ''">
+		and run_code = #{run_code}
+		</if>		    	
+	</select>
+	
+	<delete id="delete_market_all">
+		delete from UPBIT_MARKET
+	</delete>
+	
+	<delete id="delete_market_main_all">
+		delete from UPBIT_MAIN
+	</delete>
+	
+	<insert id="insert_market" parameterType="main.java.com.web.dto.upbit.UpCalResult">
+		insert into UPBIT_MARKET (
+			market,
+			cal_cnt,
+			korean_name,
+			trade_price_s,
+			trade_price_e,
+			raiseRate,
+			raisePrice,
+			buyed,
+			reg_date
+		)values(
+			#{market},
+			#{cal_cnt},
+			#{korean_name},
+			#{trade_price_1},
+			#{trade_price_10},
+			#{raiseRate},
+			#{raisePrice},
+			'',
+			now()
+		)
+	</insert>
+	
+	<insert id="insert_market_main" parameterType="main.java.com.web.dto.upbit.UpbitMarket">
+		insert into UPBIT_MAIN (
+			market,
+			english_name,
+			korean_name,
+			win,
+			cal_cnt,
+			start_price,
+			trade_price,
+			raiseRateTotal,
+			raisePriceTotal,
+			reg_date
+		)values(
+			#{market},
+			#{english_name},
+			#{korean_name},
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			now()
+		)
+	</insert>
+	
+	<update id="update_market_main" parameterType="main.java.com.web.dto.upbit.UpCalResult">
+		update UPBIT_MAIN set
+			cal_cnt = (select count(*) from UPBIT_MARKET
+						where  1 = 1 
+						and market = #{market}),
+			raiseRateTotal = raiseRateTotal + #{raiseRate},
+			raisePriceTotal = raisePriceTotal + #{raisePrice},
+			trade_price = #{trade_price_10}
+		where 1 = 1 
+		and market = #{market}
+	</update>
+	
+	<update id="update_market_main_win">
+		update UPBIT_MAIN set
+		win = raiseRateTotal * 100
+	</update>
+	
+	<update id="update_market_main_start_price" parameterType="main.java.com.web.dto.upbit.UpbitTicker">
+		update UPBIT_MAIN set
+		start_price = #{trade_price}
+		where market = #{market}
+	</update>
+	
+	<select id="select_best_down_win_one" resultType="main.java.com.web.dto.upbit.UPBIT_MAIN">
+		select 
+		    *
+		from UPBIT_MAIN
+		where 1 = 1 		
+		order by win asc
+		limit 1
+	</select>
+	
+	<select id="select_upbit_main_win" parameterType="Integer" resultType="main.java.com.web.dto.upbit.UPBIT_MAIN">
+		select 
+		    market,
+		    english_name,
+		    korean_name,
+		    win,
+		    cal_cnt,
+		    start_price,
+		    trade_price,
+		    raiseRateTotal,
+		    raisePriceTotal,
+		    reg_date
+		from UPBIT_MAIN
+		where 1 = 1 
+		and win > #{value}
+		order by win desc	    	
+	</select>
+	
+	<select id="select_upbit_market_top" parameterType="main.java.com.web.dto.upbit.UPBIT_MAIN" resultType="main.java.com.web.dto.upbit.UPBIT_MARKET">
+		select * from UPBIT_MARKET
+		where 1 = 1 
+		and market = #{market}
+		order by cal_cnt desc
+		limit #{cal_up_cnt}	    	
+	</select>
+	
+	<insert id="insert_upOrders" parameterType="main.java.com.web.dto.upbit.UpOrdersCallBack">
+		insert into UPBIT_ORDER (
+			uuid,
+			market,
+			side,
+			price,
+			buyed_price,
+			buyed_total,
+			saled_price,
+			saled_total,
+			ord_type,
+			state,
+			volume,
+			reserved_fee,
+			remaining_fee,
+			paid_fee,
+			locked,
+			executed_volume,
+			access_key,
+			secret_key,
+			name,
+			buyed,
+			reg_date
+		)values(
+			#{uuid},
+			#{market},
+			#{side},
+			#{price},
+			#{buyed_price},
+			#{buyed_total},
+			#{saled_price},
+			#{saled_total},
+			#{ord_type},
+			#{state},
+			#{volume},
+			#{reserved_fee},
+			#{remaining_fee},
+			#{paid_fee},
+			#{locked},
+			#{executed_volume},
+			#{access_key},
+			#{secret_key},
+			#{name},
+			'',
+			now()
+		)
+	</insert>
+	
+	<insert id="insert_ratelog" parameterType="main.java.com.web.dto.upbit.UPBIT_RATELOG">
+		insert into UPBIT_RATELOG (
+			ymd,
+			market,
+			calnum,
+			win,			
+			reg_date
+		)values(
+			#{ymd},
+			#{market},
+			#{calnum},
+			#{win},	
+			now()
+		)
+	</insert>
+	
+	<select id="select_order_print" parameterType="main.java.com.web.dto.upbit.UpbitUser" resultType="main.java.com.web.dto.upbit.UpOrdersCallBack">
+		select * from UPBIT_ORDER
+		where 1 = 1 
+		and access_key = #{access_key}
+		and secret_key = #{secret_key}
+		and state = 'wait' 	
+	</select>
+	
+	<update id="update_order" parameterType="main.java.com.web.dto.upbit.UpOrdersCallBack">
+		update UPBIT_ORDER set
+			state = #{state}
+		where 1 = 1 
+		and uuid = #{uuid}
+	</update>
+	
+	<update id="update_buyed" parameterType="main.java.com.web.dto.upbit.UpOrdersCallBack">
+		update UPBIT_MARKET set
+        buyed = 'Y'
+		where 1 = 1 
+		and market = #{market}
+		and cal_cnt = (select a.m from( select max(cal_cnt) as m
+						from UPBIT_MARKET
+						where 1 = 1 
+						and market = #{market}) a)  
+	</update>
+	
+	<select id="select_avg" parameterType="String" resultType="String">
+		select ifnull((ifnull(sum(buyed_price),0)/count(buyed_price)),0) as rt from UPBIT_ORDER 
+		where 1 = 1 
+		and market = #{value}
+		and side = 'bid' 	
+	</select>
+	
+	<delete id="delete_bid_done_remove" parameterType="String">
+		delete from UPBIT_ORDER
+		where 1 = 1 
+		and market = #{value}
+		and side = 'bid'
+	</delete>
+			
+</mapper>  

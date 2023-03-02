@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Main1">
+	<select id="test" resultType="String">
+		select 'test 접속이 성공 하였습니다.' from
+		dual
+	</select>
+
+
+
+	<!-- 메인스와이프이미지 테이블에 접근해서 user가 test1 인 것들의 url정보를 가져온다. -->
+	<select id="select_main_swiper"
+		resultType="main.java.com.web.dto.MainSwiperImg">
+		SELECT
+		url
+		FROM MAIN_SWIPER_IMG
+
+		WHERE user = 'test1'
+	</select>
+
+
+	<!-- 메인카테고리 테이블에서 두개의 정보를 가져온다 -->
+	<select id="select_main_category"
+		resultType="main.java.com.web.dto.MainCategory">
+		SELECT
+		url,
+		name,
+		category
+		FROM MAIN_CATEGORY
+
+		WHERE user =
+		'test1'
+
+
+	</select>
+
+
+
+	<select id="select_main_just"
+		parameterType="main.java.com.web.dto.MainJust"
+		resultType="main.java.com.web.dto.MainJust">
+		SELECT
+		seq,
+		url,
+		brand,
+		name,
+		price,
+		category
+
+		FROM MAIN_JUST
+		WHERE user =
+		'test1'
+		<if test="category != null and !category.equals('')">
+			AND category = #{category}
+		</if>
+		order by price asc
+		limit #{st_num}, #{ed_num}
+
+
+	</select>
+
+	<select id="select_main_brand"
+		resultType="main.java.com.web.dto.MainBestBrand">
+		select
+		url,
+		name
+
+		from MAIN_BEST_BRAND
+		where user = 'test1'
+	</select>
+
+	<!-- <select id="select_notice" resultType="main.java.com.web.dto.Notice"> 
+		select * from NOTICE order by date desc limit #{st_num}, #{ed_num} </select> -->
+
+	<!-- 최근 -->
+
+
+	<select id="select_notice_total" resultType="Integer">
+		select count(*) from
+		NOTICE
+	</select>
+
+	<select id="select_notice_detail" parameterType="Integer"
+		resultType="main.java.com.web.dto.Notice">
+		select * from NOTICE
+		where seq = #{seq}
+	</select>
+
+	<insert id="insert_notice"
+		parameterType="main.java.com.web.dto.Notice">
+		insert into NOTICE(
+		title,
+		content,
+		email,
+		img_url,
+		date
+		) values(
+		#{title},
+		#{content},
+		#{email},
+		#{img_url},
+		now()
+		)
+	</insert>
+
+
+
+	<select id="select_product_detail" parameterType="Integer"
+		resultType="main.java.com.web.dto.MainJust">
+		select * from MAIN_JUST
+		where 1 = 1
+		and seq = #{seq}
+	</select>
+
+	<select id="select_ProductImgs" parameterType="main.java.com.web.dto.ProductImgs" resultType="main.java.com.web.dto.ProductImgs">
+		select * from PRODUCT_IMGS
+		where 1 = 1 
+		and type = #{type}
+		and sub_seq = #{sub_seq}
+	</select>
+
+
+	<!-- 수정 -->
+	<update id="update_notice"
+		parameterType="main.java.com.web.dto.Notice">
+		update NOTICE SET
+		title=#{title},
+		content= #{content},
+		img_url=#{img_url},
+		date= now()
+		where seq = #{seq}
+	</update>
+
+
+
+	<!-- 삭제 -->
+	<delete id="delete_notice" parameterType="Integer">
+		delete from NOTICE
+		where seq = #{seq}
+	</delete>
+
+
+	<!-- 검색 여기다 담음 -->
+	<select id="select_notice"
+		resultType="main.java.com.web.dto.Notice">
+		select * from NOTICE
+		<!-- 페이징 검색 추가 -->
+		where 1=1
+		<if test="keyword != null and !keyword.equals('')">
+			and title like concat('%', #{keyword}, '%')
+		</if>
+		order by date desc
+		limit #{st_num}, #{ed_num}
+	</select>
+
+
+
+
+
+
+
+
+	<select id="select_search_product"
+		resultType="main.java.com.web.dto.MainJust" parameterType="map">
+		select distinct A.* from
+		(
+		SELECT * FROM kream.MAIN_JUST
+		Where 1=1
+		<if test="keyword != null and !keyword.equals('')">
+			and brand like concat('%', #{keyword}, '%')
+		</if>
+		union all
+		SELECT * FROM kream.MAIN_JUST
+		Where 1=1
+		<if test="keyword != null and !keyword.equals('')">
+			and name like concat('%', #{keyword}, '%')
+		</if>
+		) A
+	</select>
+
+
+
+
+
+
+	<select id="select_category_detail" parameterType="String"
+		resultType="main.java.com.web.dto.MainJust">
+
+		select * from MAIN_JUST
+
+		WHERE user = 'test1'
+
+		AND category = #{value}
+
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>  

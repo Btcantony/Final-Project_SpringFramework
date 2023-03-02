@@ -1,0 +1,1 @@
+/*$('.messages').animate({ scrollTop: $('.messages-content').height()}, 500);*/

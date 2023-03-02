@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xmlns:task="http://www.springframework.org/schema/task"	
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd
+       http://www.springframework.org/schema/websocket 
+       http://www.springframework.org/schema/websocket/spring-websocket.xsd      
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd 
+       ">
+		
+	<task:annotation-driven />
+	<annotation-driven />
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<beans:bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/jsp/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+
+	<!-- Default DBMS Settings -->
+	<beans:bean id="propertyHolder"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<beans:property name="locations">
+			<beans:list>
+				<beans:value>classpath:/runtimeEnv/jdbcConnection.properties
+				</beans:value>
+			</beans:list>
+		</beans:property>
+	</beans:bean> 
+
+	<!--데이터 베이스 설정 -->	
+	<beans:bean id="dataSource1" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<beans:property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />		
+		<beans:property name="url" value="${jdbc.url}" />
+		<beans:property name="username" value="${jdbc.username}" />
+		<beans:property name="password" value="${jdbc.password}" />
+	</beans:bean>	
+
+	<beans:bean id="transactionManager1" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<beans:property name="dataSource" ref="dataSource1" />
+	</beans:bean>
+
+	<!-- mybatis sql session factory -->
+	<beans:bean id="sqlFactory1"
+		class="main.java.com.web.comp.ReloadableSqlMapper">
+		<beans:property name="dataSource" ref="dataSource1" />
+		<beans:property name="beanName" value="sqlFactory1" />
+		<beans:property name="mapperLocations" value="classpath:sqlMapper/*.xml" />
+	</beans:bean>
+	
+	<!-- mybatis sql session -->
+	<beans:bean id="sqlSession1" class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg index="0" ref="sqlFactory1" />
+	</beans:bean>
+
+	<!-- 인터셉터 객체 생성 -->
+    <beans:bean id="authenticationInterceptor" class="main.java.com.web.interceptor.AuthenticationInterceptor">
+    </beans:bean>    
+    <interceptors>
+        <interceptor>
+            <mapping path="/**"/>            
+            <beans:ref bean="authenticationInterceptor"/>
+        </interceptor>
+    </interceptors>
+    
+    <websocket:handlers>
+		<websocket:mapping handler="chattingHandler" path="/chatting"/>
+		<websocket:sockjs></websocket:sockjs>
+	</websocket:handlers>
+	
+	<beans:bean id="chattingHandler" class="main.java.com.web.chat.WebSockChatHandler"/>
+	
+	<!--  준현 채팅 -->
+<!-- 		 <beans:bean id="chatHandler" class="main.java.com.web.chat.ChatWebSocketHandler" />
+		 
+		  <websocket:handlers>
+		 	 <websocket:mapping handler="chattingHandler" path="/main2/chat" />
+			  <websocket:handshake-interceptors>
+		         <bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
+		      </websocket:handshake-interceptors>
+		 	 <websocket:sockjs />
+ 		  </websocket:handlers> -->
+	 
+	<!--  -->
+	
+	<context:component-scan base-package="main" />
+</beans:beans>

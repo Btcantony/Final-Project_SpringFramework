@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Login1">
+
+	<insert id="insert_user"
+		parameterType="main.java.com.web.dto.Join">
+		insert into USERS(
+		email,
+		password,
+		image_url,
+		nick_name,
+		phone_num
+		) values(
+		#{email},
+		#{password},
+		#{image_url},
+		#{nick_name},
+		#{phone_num}
+		)
+	</insert>
+	
+	<select id="select_my_profile"
+		parameterType="String" resultType="main.java.com.web.dto.Join">
+		select * from USERS
+		where email = #{value}
+	</select>
+	
+	
+
+	<insert id="insert_myaddress"
+		parameterType="main.java.com.web.dto.Addr">
+		insert into ADDR(
+		email,
+		addr_type,
+		main_addr,
+		main_detail
+		) values(
+		#{email},
+		#{addr_type},
+		#{main_addr},
+		#{main_detail}
+		)
+	</insert>
+
+
+	<select id="select_user_count"
+		parameterType="main.java.com.web.dto.Join" resultType="Integer">
+		select count(*)
+		from USERS
+		where 1 = 1
+		and email = #{email}
+		and password = #{password}
+	</select>
+
+
+	<select id="isMember" parameterType="main.java.com.web.dto.Join"
+		resultType="Integer">
+		select count(*) from USERS
+		where 1 = 1
+		and email = #{email}
+	</select>
+
+
+	<select id="select_addr"
+		parameterType="main.java.com.web.dto.Addr"
+		resultType="main.java.com.web.dto.Addr">
+		select * from ADDR
+		where 1 = 1
+		and email = #{email}
+		and addr_type = #{addr_type}
+	</select>
+
+
+
+
+	<select id="select_point" parameterType="String"
+		resultType="Integer">
+		select sum(amount) from POINT where email = #{value}
+	</select>
+
+
+
+
+
+	<select id="select_addr_all" parameterType="String"
+		resultType="main.java.com.web.dto.Addr">
+
+		select * from ADDR
+
+		WHERE email = #{value}
+
+	</select>
+
+
+	<insert id="insert_order"
+		parameterType="main.java.com.web.dto.Order">
+		insert into ORDERLIST(
+		
+		orderNum,
+		orderDate,
+		cancel_yn,
+		deliver_yn,
+		email,
+		deliver_type,
+		addr_total,
+		point_pay
+		
+		)values(
+		
+		#{orderNum},
+		#{orderDate},
+		#{cancel_yn},
+		#{deliver_yn},
+		#{email},
+		#{deliver_type},
+		#{addr_total},
+		#{point_pay}
+		
+		)
+	</insert>
+
+	<insert id="insert_item"
+		parameterType="main.java.com.web.dto.Item">
+		insert into ITEM(
+		
+		orderNum,
+		brand,
+		name,
+		seq,
+		price,
+		url
+		
+		)values(
+		
+		#{orderNum},
+		#{brand},
+		#{name},
+		#{seq},
+		#{price},
+		#{url}
+		)
+	</insert>
+
+
+	<select id="select_order_all" parameterType="main.java.com.web.dto.Order" resultType="main.java.com.web.dto.Order">
+		select * from ORDERLIST
+		WHERE 1 = 1 
+		and email = #{email} 
+		and deliver_yn = #{statusCode}
+	</select>
+	
+	<select id="select_order_items" parameterType="String"
+		resultType="main.java.com.web.dto.Item">
+
+		select * from ITEM
+
+		WHERE 1=1 and orderNum = #{value}
+
+	</select>
+	
+	<select id="select_order_all_cnt" parameterType="main.java.com.web.dto.Order" resultType="main.java.com.web.dto.Order">
+
+		select 
+		    (select count(*) from ORDERLIST
+		    where 1 = 1 
+		    and deliver_yn = 'N'
+		    and email = #{email}) as deliver_yn_n_cnt,
+		    (select count(*) from ORDERLIST
+		    where 1 = 1 
+		    and deliver_yn = 'Y'
+		    and email = #{email}) as deliver_yn_y_cnt,
+		    (select count(*) from ORDERLIST
+		    where 1 = 1 
+		    and deliver_yn = 'F'
+		    and email = #{email}) as deliver_yn_f_cnt 
+		from dual
+
+	</select>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>  
